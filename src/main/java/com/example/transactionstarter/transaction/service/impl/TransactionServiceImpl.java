@@ -4,6 +4,7 @@ import com.example.transactionstarter.transaction.dto.CreateTransactionRequest;
 import com.example.transactionstarter.transaction.entity.Transaction;
 import com.example.transactionstarter.transaction.enums.TransactionStatus;
 import com.example.transactionstarter.transaction.exception.DuplicateTransactionException;
+import com.example.transactionstarter.transaction.exception.ResourceNotFoundException;
 import com.example.transactionstarter.transaction.repository.TransactionRepository;
 import com.example.transactionstarter.transaction.service.interfaces.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,14 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
         return repository.save(transaction);
+    }
+
+    @Override
+    public Transaction getTransaction(String transactionId) {
+
+        return repository.findById(transactionId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Transaction not found: " + transactionId));
     }
 }
